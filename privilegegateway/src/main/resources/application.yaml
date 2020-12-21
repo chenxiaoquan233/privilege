@@ -1,0 +1,2078 @@
+server:
+  port: 8088
+
+privilege-ip: localhost:8081
+other-ip: localhost:9999
+order-ip:
+  order: 192.168.43.239:9900
+  payment: 192.168.43.239:9400
+  freight: 192.168.43.50:9800
+#  order: localhost:9900
+#  payment: localhost:9400
+#  freight: localhost:9800
+gateway:
+  activity: 192.168.43.25:8988
+  goods: 192.168.43.25:8907
+  falshsale: 192.168.43.25:8188
+#  activity: localhost:8988
+#  goods: localhost:8907
+#  falshsale: localhost:8188
+
+dubbo:
+  # 配置服务信息
+  application:
+    name: privilege-gateway
+    # 禁用QOS同一台机器可能会有端口冲突现象
+    qos-enable: false
+    qos-accept-foreign-ip: false
+  # 配置注册中心
+  registry:
+    address: nacos://47.115.162.144:8847
+  # 设置协议-协议由提供方指定消费方被动接受
+  protocol:
+    name: dubbo
+    port: 20888
+    # 设置超时时间
+  consumer:
+    timeout: 4000
+    check: false
+
+spring:
+  application:
+    name: privilege-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+
+
+      routes:
+        #权限模块
+        - id: admin1
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/states
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+
+        - id: admin2
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+
+        - id: admin3
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin4
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin5
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/uploadImg
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin6
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/all
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin7
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/password
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin8
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/password/reset
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin9
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/login
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+
+        - id: admin10
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/logout
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin11
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/logout
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin12
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}/privileges
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin13
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin14
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin15
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+
+        - id: admin16
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}/release
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin17
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}/forbid
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin18
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}/approve
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin19
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{userid}/roles/{roleid}
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin20
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{userid}/roles/{roleid}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin21
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/{id}/proxy
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin22
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{aid}/busers/{bid}
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin23
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/proxies/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin24
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/proxies
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin25
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/proxies/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin26
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin27
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin28
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+
+        - id: admin29
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+
+        - id: admin30
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/adminusers/{id}/roles
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin31
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/adminusers/self/roles
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin32
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles/{roleid}/privileges/{privilegeid}
+            - Method=POST
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin33
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roleprivileges/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin34
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles/{id}/privileges
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin35
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/privileges
+            - Method=GET
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin36
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/privileges/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin37
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+        - id: admin38
+          uri: http://${privilege-ip}
+          predicates:
+            - Path=/shops/{shopId}/roles/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/privilege
+            - Auth=authorization
+
+
+        #商品模块
+        - id: goods1
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/skus/states
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+        - id: goods2
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/skus
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+        - id: goods3
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/skus/{id}
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+
+        - id: goods4
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{id}/skus
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods5
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/uploadImg
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods6
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods7
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods8
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/categories/{id}/subcategories
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+        - id: goods9
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/categories/{id}/subcategories
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods10
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/categories/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods11
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/categories/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods12
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/spus/{id}
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+        - id: goods13
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/share/{sid}/skus/{id}
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods14
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods15
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods16
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods17
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods18
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods19
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/floatPrices
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods20
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/floatPrices/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods21
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/brands
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods22
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/brands/{id}/uploadImg
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods23
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/brands
+            - Method=GET
+          filters:
+            - PrefixPath=/goods
+
+        - id: goods24
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/brands/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods25
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/brands/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods26
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{spuId}/categories/{id}
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods27
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{spuId}/categories/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods28
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{spuId}/brands/{id}
+            - Method=POST
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: goods29
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/spus/{spuId}/brands/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/goods
+            - Auth=authorization
+
+        - id: falshsale1
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/timesegments/{id}/flashsales
+            - Method=GET
+          filters:
+            - PrefixPath=/flashsale
+
+        - id: falshsale2
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/timesegments/{id}/flashsales
+            - Method=POST
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale3
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/flashsales/current
+            - Method=GET
+          filters:
+            - PrefixPath=/flashsale
+
+        - id: falshsale4
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale5
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale6
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{id}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale7
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{id}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale8
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{id}/flashitems
+            - Method=POST
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: falshsale9
+          uri: http://${gateway.falshsale}
+          predicates:
+            - Path=/shops/{shopId}/flashsales/{fid}/flashitems/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/flashsale
+            - Auth=authorization
+
+        - id: comment1
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/comments/states
+            - Method=GET
+          filters:
+            - PrefixPath=/comment
+
+        - id: comment2
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/orderitems/{id}/comments
+            - Method=POST
+          filters:
+            - PrefixPath=/comment
+            - Auth=authorization
+
+        - id: comment3
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/skus/{id}/comments
+            - Method=GET
+          filters:
+            - PrefixPath=/comment
+
+        - id: comment4
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/comments/{id}/confirm
+            - Method=PUT
+          filters:
+            - PrefixPath=/comment
+            - Auth=authorization
+
+        - id: comment5
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/comments
+            - Method=GET
+          filters:
+            - PrefixPath=/comment
+            - Auth=authorization
+
+        - id: comment6
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/comments/all
+            - Method=GET
+          filters:
+            - PrefixPath=/comment
+            - Auth=authorization
+
+        - id: coupon1
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/coupons/states
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+
+        - id: coupon2
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities
+            - Method=POST
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon3
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}/uploadImg
+            - Method=POST
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon4
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/couponactivities
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+
+        - id: coupon5
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/invalid
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon6
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/couponactivities/{id}/skus
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+
+        - id: coupon7
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+
+        - id: coupon8
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon9
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon10
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}/skus
+            - Method=POST
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon11
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponskus/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon12
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/coupons
+            - Method=GET
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon13
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/couponactivities/{id}/usercoupons
+            - Method=POST
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon14
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: coupon15
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/couponactivities/{id}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/coupon
+            - Auth=authorization
+
+        - id: presale1
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/presales/states
+            - Method=GET
+          filters:
+            - PrefixPath=/presale
+
+        - id: presale2
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/presales
+            - Method=GET
+          filters:
+            - PrefixPath=/presale
+
+        - id: presale3
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/presales
+            - Method=GET
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: presale4
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/presales
+            - Method=POST
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: presale5
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/presales/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: presale6
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/presales/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: presale7
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/presales/{id}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: presale8
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/presales/{id}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/presale
+            - Auth=authorization
+
+        - id: groupon1
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/groupons/states
+            - Method=GET
+          filters:
+            - PrefixPath=/groupon
+
+        - id: groupon2
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/groupons
+            - Method=GET
+          filters:
+            - PrefixPath=/groupon
+
+        - id: groupon3
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/groupons
+            - Method=GET
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: groupon4
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/spus/{id}/groupons
+            - Method=POST
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: groupon5
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/groupons/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: groupon6
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/groupons/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: groupon7
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/groupons/{id}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: groupon8
+          uri: http://${gateway.activity}
+          predicates:
+            - Path=/shops/{shopId}/groupons/{id}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/groupon
+            - Auth=authorization
+
+        - id: shop1
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/states
+            - Method=GET
+          filters:
+            - PrefixPath=/shop
+
+        - id: shop2
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops
+            - Method=POST
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        - id: shop3
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}
+            - Method=PUT
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        - id: shop4
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        - id: shop5
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/newshops/{id}/audit
+            - Method=PUT
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        - id: shop6
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/onshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        - id: shop7
+          uri: http://${gateway.goods}
+          predicates:
+            - Path=/shops/{shopId}/offshelves
+            - Method=PUT
+          filters:
+            - PrefixPath=/shop
+            - Auth=authorization
+
+        #订单模块
+        - id: customer-freight
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/region/{rid}/price
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+
+        - id: admin-freight-1
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-2
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+
+        - id: admin-freight-3
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/clone
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-4
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-5
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-6
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-7
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/default
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-8
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/weightItems
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-9
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/weightItems
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-10
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/pieceItems
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-11
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/freightmodels/{id}/pieceItems
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-12
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/weightItems/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-13
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/weightItems/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-14
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/pieceItems/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: admin-freight-15
+          uri: http://${order-ip.freight}
+          predicates:
+            - Path=/shops/{shopId}/pieceItems/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        - id: all-payment
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/payments/states,/payments/patterns
+            - Method=GET
+
+        - id: customer-payment1
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/orders/{id}/payments
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: customer-payment1
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/orders/{id}/payments
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+
+        - id: customer-payment2
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/aftersales/{id}/payments
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: customer-payment3
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/aftersales/{id}/payments
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: customer-payment4
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/orders/{id}/refunds
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: customer-payment5
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/aftersales/{id}/refunds
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-payment-1
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}/payments
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-payment-2
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}/payments
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-payment-3
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/shops/{shopId}/payments/{id}/refunds
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: admin-payment-4
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}/refunds
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: admin-payment-5
+          uri: http://${order-ip.payment}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}/refunds
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: all-order
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/states
+            - Method=GET
+          filters:
+
+        - id: customer-order-get
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-post
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-id-get
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-id-put
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-id-delete
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-id-confirm
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/{id}/confirm
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: customer-order-id-groupon
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/orders/{id}/groupon-normal
+            - Method=POST
+          filters:
+            - Auth=authorization
+
+        - id: a-order-get
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/shops/{shopId}/orders
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: a-order-id-put
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        - id: a-order-id-get
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+
+        - id: a-order-id-del
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        - id: a-order-id-put
+          uri: http://${order-ip.order}
+          predicates:
+            - Path=/shops/{shopId}/orders/{id}/deliver
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        #其他模块
+
+        - id: share1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shareactitivities/states
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+
+        - id: share2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/skus/{id}/shares
+            - Method=POST
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shares
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/shares
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/beshared
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/beshared
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share7
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/skus/{id}/shareactivities
+            - Method=POST
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share8
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shareactivities
+            - Method=GET
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share9
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/shareactivities/{id}
+            - Method=PUT
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share10
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/shareactivities/{id}
+            - Method=DELETE
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        - id: share11
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/shareactivities/{id}/online
+            - Method=PUT
+          filters:
+            - PrefixPath=/share
+            - Auth=authorization
+
+        #用户模块
+
+        #用户
+        #获得买家状态
+        - id: user1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/states
+            - Method=GET
+          filters:
+            - Auth=authorization
+        #注册用户
+        - id: user2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users
+            - Method=POST
+        #买家查看自己信息
+        - id: user3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #买家修改自己的信息
+        - id: user4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users
+            - Method=PUT
+          filters:
+            - Auth=authorization
+          #用户修改密码
+        - id: user5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/password
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #用户重置密码
+        - id: user6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/password/reset
+            - Method=PUT
+            #平台管理员获取所用用户列表
+        - id: user7
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/all
+            - Method=GET
+          filters:
+            - Auth=authorization
+          #用户登录
+        - id: user8
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/login
+            - Method=POST
+        #用户登出
+        - id: user9
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/logout
+            - Method=GET
+            #管理员查看任意买家信息
+        - id: user10
+          uri: http://${other-ip}
+          predicates:
+            - Path=/users/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #平台管理员封禁买家
+        - id: user11
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/users/{id}/ban
+            - Method=PUT
+          filters:
+            - Auth=authorization
+        #平台管理员解禁买家
+        - id: user12
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/users/{id}/release
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #足迹服务 1个
+            #查看浏览记录
+        - id: footprint1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/footprints
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #商品收藏服务 3个
+            #查看
+        - id: favourite1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/favorites
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #收藏
+        - id: favourite2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/favorites/goods/{skuId}
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #删除
+        - id: favourite3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/favorites/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+        #广告服务 12个
+        #获得所有状态
+        - id: advertise1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/advertisement/states
+            - Method=GET
+            #设置默认广告
+        - id: advertise2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}/default
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员修改广告内容
+        - id: advertise3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员删除某一个广告
+        - id: advertise4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+            #管理员上传广告图片
+        - id: advertise5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}/uploadimg
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #管理员上架广告
+        - id: advertise6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}/onshelves
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员下架广告
+        - id: advertise7
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}/offshelves
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员审核广告
+        - id: advertise8
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/{id}/audit
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员差康某一广告时间段广告
+        - id: advertise9
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/timesegments/{id}/advertisement
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #管理员在广告时段下新建广告
+        - id: advertise10
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/timesegments/{id}/advertisement
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #广利源在广告时段下增加广告
+        - id: advertise11
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/timesegments/{tid}/advertisement/{id}
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #获取当前时段广告了列表
+        - id: advertise12
+          uri: http://${other-ip}
+          predicates:
+            - Path=/advertisement/current
+            - Method=GET
+
+        #售后服务 13个
+
+        - id: aftersale1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/states
+            - Method=GET
+          #买家提交售后单
+        - id: aftersale2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/orderitems/{id}/aftersales
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #买家查询所有售后单
+        - id: aftersale3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales
+            - Method=GET
+          filters:
+            - Auth=authorization更新token发放时间更新token发放时间
+            #管理员产看所有售后单
+        - id: aftersale4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/aftersales
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #买家根据售后id查看售后单
+        - id: aftersale5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #买家修改售后单
+        - id: aftersale6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #买家取消售后单
+        - id: aftersale7
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+            #买家修填写运单信息
+        - id: aftersale8
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/{id}/sendback
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #买家确认售后单结束
+        - id: aftersale9
+          uri: http://${other-ip}
+          predicates:
+            - Path=/aftersales/{id}/confirm
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员根据id查看售后单
+        - id: aftersale10
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #管理员同意售后
+        - id: aftersale11
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}/confirm
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员同意售后
+        - id: aftersale12
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}/receive
+            - Method=PUT
+          filters:
+            - Auth=authorization
+          #店家寄出货物
+        - id: aftersale13
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/aftersales/{id}/deliver
+            - Method=PUT
+          filters:
+            - Auth=authorization
+
+        # 地址服务 9个
+        #买家新增地址
+        - id: address1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/addresses
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #买家查看地址
+        - id: address2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/addresses
+            - Method=GET
+          filters:
+            - Auth=authorization
+          #买家设置默认地址
+        - id: address3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/addresses/{id}/default
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #买家修改地址信息
+        - id: address4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/addresses/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #买家删除地址
+        - id: address5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/addresses/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+            #管理员在地区下新增子地址
+        - id: address6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/regions/{id}/subregions
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #管理员修改某个地区
+        - id: address7
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/regions/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+            #管理员让某个地区无效
+        - id: address8
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/regions/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+
+        - id: address9
+          uri: http://${other-ip}
+          predicates:
+            - Path=/region/{id}/ancestor
+            - Method=GET
+
+        #购物车服务 5个
+        #买家获得购物车列表
+        - id: cart1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/carts
+            - Method=GET
+          filters:
+            - Auth=authorization
+            #买家将商品加入购物车
+        - id: cart2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/carts
+            - Method=POST
+          filters:
+            - Auth=authorization
+            #买家清空购物车
+        - id: cart3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/carts
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+            #买家修改单个购物车项
+        - id: cart4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/carts/{id}
+            - Method=PUT
+          filters:
+            - Auth=authorization
+          #买家删除购物车中商品
+        - id: cart5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/carts/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+          #时间段服务 6个
+          #管理员新增广告时间段
+        - id: time1
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/timesegments
+            - Method=POST
+          filters:
+            - Auth=authorization
+        - id: time2
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/timesegments
+            - Method=GET
+          filters:
+            - Auth=authorization
+        - id: time3
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/flashsale/timesegments
+            - Method=POST
+          filters:
+            - Auth=authorization
+        - id: time4
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/flashsale/timesegments
+            - Method=GET
+          filters:
+            - Auth=authorization
+        - id: time5
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/advertisement/timesegments/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+        - id: time6
+          uri: http://${other-ip}
+          predicates:
+            - Path=/shops/{shopId}/flashsale/timesegments/{id}
+            - Method=DELETE
+          filters:
+            - Auth=authorization
+
+  redis:
+    # Redis服务器地址
+    host: 47.115.162.144
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码
+    password: 1234567
+    # Redis数据库索引（默认为0）
+    database: 0
+    #连接池最大连接数（使用负值表示没有限制）
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+    timeout: 8000
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+
+# 配置rocketmq
+rocketmq:
+  # 指定namesrv地址
+  name-server: 47.115.162.144:9876
+  producer:
+    #生产者group名称
+    group: producer_group
+    #一次发送多少数量消息
+    max-message-size: 4096
+    #发送消息超时时间,默认3000
+    send-message-timeout: 3000
+    #发送消息失败重试次数，默认2
+    retry-times-when-send-async-failed: 2
+
+# 网关token相关配置
+privilegegateway:
+  jwtExpire: 3600
+  refreshJwtTime: 60

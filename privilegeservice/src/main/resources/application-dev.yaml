@@ -1,0 +1,23 @@
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+  datasource:
+    url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8
+    #url: jdbc:mysql://domi.xqchen.site:3360/oomall?serverTimezone=GMT%2B8
+    username: OOMall
+    #username: dbuser
+    password: 1234567
+    druid:
+      stat-view-servlet:
+        login-username: admin
+        login-password: 123456
+        enabled: true
+        url-pattern: /druid/*
+  redis:
+    # Redis服务器地址
+    host: 47.115.162.144
+    # Redis服务器连接端口
+    port: 6379
+    password: 1234567

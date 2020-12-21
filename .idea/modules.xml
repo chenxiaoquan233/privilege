@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oomall.iml" filepath="$PROJECT_DIR$/oomall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/privilegegateway/privilegegateway.iml" filepath="$PROJECT_DIR$/privilegegateway/privilegegateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/privilegeservice/privilegeservice.iml" filepath="$PROJECT_DIR$/privilegeservice/privilegeservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/privilegeservice-client/privilegeservice-client.iml" filepath="$PROJECT_DIR$/privilegeservice-client/privilegeservice-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/roleprivilege.iml" filepath="$PROJECT_DIR$/roleprivilege.iml" />
+    </modules>
+  </component>
+</project>
