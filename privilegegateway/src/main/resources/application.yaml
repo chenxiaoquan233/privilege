@@ -125,7 +125,6 @@ spring:
             - Method=PUT
           filters:
             - PrefixPath=/privilege
-            - Auth=authorization
 
         - id: admin9
           uri: http://${privilege-ip}
