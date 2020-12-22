@@ -643,7 +643,7 @@ public class PrivilegeController {
             @ApiResponse(code = 0, message = "成功"),
     })
     @Audit // 需要认证
-    @PutMapping("adminusers/{id}/forbid")
+    @PutMapping("/shops/{did}/adminusers/{id}/forbid")
     public Object forbidUser(@PathVariable Long id) {
         if (logger.isDebugEnabled()) {
             logger.debug("forbidUser: id = "+ id);
@@ -669,7 +669,7 @@ public class PrivilegeController {
             @ApiResponse(code = 0, message = "成功"),
     })
     @Audit // 需要认证
-    @PutMapping("adminusers/{id}/release")
+    @PutMapping("/shops/{did}/adminusers/{id}/release")
     public Object releaseUser(@PathVariable Long id) {
         if (logger.isDebugEnabled()) {
             logger.debug("releaseUser: id = "+ id);
