@@ -123,15 +123,9 @@ public class RoleDao {
         List<Long> retIds = new ArrayList<>(rolePrivilegePos.size());
         for (RolePrivilegePo po : rolePrivilegePos) {
             StringBuilder signature = Common.concatString("-", po.getRoleId().toString(),
-                    po.getPrivilegeId().toString(), po.getCreatorId().toString());
+                    po.getPrivilegeId().toString(), po.getCreatorId().toString(), po.getGmtCreate().toString());
             String newSignature = SHA256.getSHA256(signature.toString());
-
-            if (newSignature.equals(po.getSignature())) {
-                retIds.add(po.getPrivilegeId());
-                logger.debug("getPrivIdsBByRoleId: roleId = " + po.getRoleId() + " privId = " + po.getPrivilegeId());
-            } else {
-                logger.info("getPrivIdsBByRoleId: Wrong Signature(auth_role_privilege): id =" + po.getId());
-            }
+            retIds.add(po.getPrivilegeId());
         }
         return retIds;
     }

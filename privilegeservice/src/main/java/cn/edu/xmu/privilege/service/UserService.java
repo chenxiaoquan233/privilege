@@ -183,10 +183,13 @@ public class UserService {
      * */
     @Transactional
     public ReturnObject<VoObject> assignRole(Long createid, Long userid, Long roleid, Long did){
-        if ((userDao.checkUserDid(userid, did) && userDao.checkRoleDid(roleid, did)) || did == Long.valueOf(0)) {
-            return userDao.assignRole(createid, userid, roleid);
-        }
-        else {
+        if ((userDao.checkUserDid(userid, did) && userDao.checkRoleDid(roleid, did)) || did.equals(Long.valueOf(0))) {
+            if (userDao.checkRoleUserExist(roleid, userid)) {
+                return userDao.assignRole(createid, userid, roleid);
+            } else {
+                return new ReturnObject<>(ResponseCode.USER_ROLE_REGISTERED);
+            }
+        } else {
             return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
         }
     }

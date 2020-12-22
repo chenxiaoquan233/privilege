@@ -103,7 +103,7 @@ public class RoleService {
     }
 
     public ReturnObject<List> adminFindRolePrivs(Long id, Long did){
-        ReturnObject<List>  ret = roleDao.adminGetRolePrivByRoleId(id, did);
+        ReturnObject<List> ret = roleDao.adminGetRolePrivByRoleId(id, did);
         return ret;
     }
 

@@ -131,12 +131,12 @@ public class PrivilegeController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("/shops/{did}/adminusers/{userid}/roles/{roleid}")
     public Object assignRole(@LoginUser Long createid, @PathVariable Long did, @PathVariable Long userid, @PathVariable Long roleid){
 
         ReturnObject<VoObject> returnObject =  userService.assignRole(createid, userid, roleid, did);
         if (returnObject.getCode() == ResponseCode.OK) {
+            httpServletResponse.setStatus(HttpStatus.CREATED.value());
             return Common.getRetObject(returnObject);
         } else {
             return Common.decorateReturnObject(returnObject);

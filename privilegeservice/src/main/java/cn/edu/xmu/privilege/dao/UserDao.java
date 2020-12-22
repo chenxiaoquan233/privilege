@@ -394,6 +394,18 @@ public class UserDao{
         return true;
     }
 
+    public boolean checkRoleUserExist(Long roleid,Long userid){
+        UserRolePoExample userRolePoExample = new UserRolePoExample();
+        UserRolePoExample.Criteria criteria = userRolePoExample.createCriteria();
+        criteria.andUserIdEqualTo(userid);
+        criteria.andRoleIdEqualTo(roleid);
+        List<UserRolePo> userRolelist = userRolePoMapper.selectByExample(userRolePoExample);
+        if(userRolelist.size()>0){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @description 检查角色的departid是否与路径上的一致
      * @param roleid 角色id
